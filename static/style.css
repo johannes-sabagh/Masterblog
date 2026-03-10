@@ -1,27 +1,157 @@
+/* ── Reset & Base ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #faf9f7;
+  --surface:   #ffffff;
+  --border:    #e8e4de;
+  --text:      #1a1a1a;
+  --muted:     #7a7065;
+  --accent:    #c0392b;
+  --accent-h:  #a93226;
+  --radius:    6px;
+  --max-w:     680px;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #F5F5F5;
-    padding: 20px;
-    color: #333;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  padding: 2.5rem 1.25rem 4rem;
 }
 
+/* ── Layout ───────────────────────────────────── */
+body > *,
+.container {
+  max-width: var(--max-w);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Typography ───────────────────────────────── */
 h1 {
-    text-align: center;
-    color: #4F4F4F;
+  font-size: 2rem;
+  font-weight: normal;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--text);
 }
 
+h2 {
+  font-size: 1.25rem;
+  font-weight: normal;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.35rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* ── Blog Posts ───────────────────────────────── */
 .post {
-    background-color: #FFF;
-    border: 1px solid #DDD;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.25rem;
 }
 
-.post h2 {
-    margin-top: 0;
+.post p em {
+  font-style: italic;
+  color: var(--muted);
+  font-size: 0.875rem;
 }
 
-.post p {
-    margin: 10px 0;
+.post p:last-of-type {
+  margin-top: 0.65rem;
+  font-size: 0.95rem;
 }
+
+.post > div {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Forms ────────────────────────────────────── */
+label {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  transition: border-color 0.15s;
+  resize: vertical;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.field {
+  margin-bottom: 1.25rem;
+}
+
+/* ── Buttons ──────────────────────────────────── */
+input[type="submit"],
+button[type="submit"] {
+  display: inline-block;
+  padding: 0.5rem 1.1rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+input[type="submit"]:hover,
+button[type="submit"]:hover {
+  background: var(--accent-h);
+}
+
+/* Subtle secondary style for Delete/Update inline buttons */
+.post button[type="submit"] {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.75rem;
+  font-size: 0.78rem;
+}
+
+.post button[type="submit"]:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: transparent;
+}
+
+/* ── Utility ──────────────────────────────────── */
+br { display: none; } /* forms use .field spacing instead */
