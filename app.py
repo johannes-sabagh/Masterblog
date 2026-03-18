@@ -3,12 +3,32 @@ import json
 
 app = Flask(__name__)
 
+
+POSTS_FILE = 'blog_posts.json'
+
+
+def load_posts():
+    """Load and return all blog posts from the JSON file."""
+    try:
+        with open(POSTS_FILE, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+    except json.JSONDecodeError:
+        return []
+
+
+def save_posts(posts):
+    """Save the list of blog posts to the JSON file."""
+    with open(POSTS_FILE, 'w') as f:
+        json.dump(posts, f, indent=4)
+
+
+
 @app.route('/')
 def index():
     """Render the homepage with all blog posts."""
-    with open('blog_posts.json', 'r') as posts_file:
-        blog_posts= json.load(posts_file)
-    return render_template('index.html', posts=blog_posts)
+    return render_template('index.html', posts=load_posts())
 
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -16,47 +36,36 @@ def add():
     """Display the add post form (GET) or create a new post (POST)."""
     if request.method == 'POST':
         # Extract form data
-        author = request.form['author']
-        title = request.form['title']
-        content = request.form['content']
 
-        with open('blog_posts.json', 'r') as posts_file:
-            blog_posts = json.load(posts_file)
+        author = request.form.get('author','').strip()
+        title = request.form.get('title', '').strip()
+        content = request.form.get('content').strip()
+        if not author or not title or not content:
+            return render_template('add.html', error='All field are required')
 
-        # Build new post, using list length to generate a simple ID
+
+        blog_posts = load_posts()
+
+        # Build new post, deriving ID from the current max to avoid duplicates after deletions
+        new_id = max((p['id'] for p in blog_posts), default=0) + 1
         new_post = {
-            'id' : len(blog_posts)+1,
+            'id' : new_id,
             'author' : author,
             'title' : title,
             'content' : content
         }
         blog_posts.append(new_post)
-
-        with open('blog_posts.json', 'w') as posts_file:
-            json.dump(blog_posts, posts_file, indent=4)
+        save_posts(blog_posts)
         return redirect(url_for('index'))
-
 
     return render_template('add.html')
 
 
-@app.route('/delete/<int:post_id>')
+@app.route('/delete/<int:post_id>', methods=['POST'])
 def delete(post_id):
     """Delete a post by ID and redirect to the homepage."""
-    with open('blog_posts.json', 'r') as posts_file:
-        blog_posts = json.load(posts_file)
-
-    updated_posts = []
-
-    # Keep all posts except the one being deleted
-    for post in blog_posts:
-        if post['id'] != post_id:
-            updated_posts.append(post)
-
-    blog_posts = updated_posts
-    with open('blog_posts.json', 'w') as posts_file:
-        json.dump(blog_posts, posts_file, indent=4)
-
+    blog_posts = load_posts()
+    save_posts([p for p in blog_posts if p['id'] != post_id])
     return redirect(url_for('index'))
 
 @app.route('/update/<int:post_id>', methods=['GET', 'POST'])
@@ -67,13 +76,14 @@ def update(post_id):
         return "Post not found", 404
 
     if request.method == 'POST':
-        # Extract updated fields from the form
-        author = request.form['author']
-        title = request.form['title']
-        content = request.form['content']
+        author = request.form.get('author', '').strip()
+        title = request.form.get('title', '').strip()
+        content = request.form.get('content', '').strip()
 
-        with open('blog_posts.json', 'r') as posts_file:
-            blog_posts = json.load(posts_file)
+        if not author or not title or not content:
+            return render_template('update.html', post=post, error="All fields are required.")
+
+        blog_posts = load_posts()
 
         # Find the matching post and update its fields in place
         for p in blog_posts:
@@ -83,22 +93,18 @@ def update(post_id):
                 p['content'] = content
                 break
 
-        with open('blog_posts.json', 'w') as posts_file:
-            json.dump(blog_posts, posts_file, indent=4)
-
+        save_posts(blog_posts)
         return redirect(url_for('index'))
 
     return render_template('update.html', post=post)
 
+
 def fetch_post_by_id(post_id):
     """Return the post matching post_id, or None if not found."""
-    with open('blog_posts.json', 'r') as posts_file:
-        blog_posts = json.load(posts_file)
-    for post in blog_posts:
+    for post in load_posts():
         if post['id'] == post_id:
             return post
     return None
-
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

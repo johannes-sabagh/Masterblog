@@ -1,20 +1,14 @@
 [
     {
-        "id": 3,
-        "author": "first author",
-        "title": "first title",
-        "content": "some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text "
+        "id": 4,
+        "author": "test1",
+        "title": "test1",
+        "content": "test1"
     },
     {
-        "id": 2,
-        "author": "second author",
-        "title": "test2",
-        "content": "test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 test3 "
-    },
-    {
-        "id": 3,
-        "author": "author 3",
-        "title": "title 3",
-        "content": "content content content content content content content content content content content content content content "
+        "id": 5,
+        "author": "test10",
+        "title": "test10",
+        "content": "test10"
     }
 ]

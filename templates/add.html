@@ -7,7 +7,9 @@
 </head>
 <body>
     <h1>Add a post</h1>
-
+    {% if error %}
+        <p style="color: red;">{{error}}</p>
+    {% endif %}
     <form method="POST" action="/add">
         <label for="author">Author:</label><br>
         <input type="text" id="author" name="author" required><br><br>
